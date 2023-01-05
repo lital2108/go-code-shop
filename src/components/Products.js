@@ -6,7 +6,6 @@ import MyContext from "../MyContext";
 
 const Products = () => {
   const {productsData} = useContext(MyContext);
-  // console.log(productsData);
     return(
       <section className="products">
         {productsData.map((product)=>{
@@ -17,11 +16,12 @@ const Products = () => {
               title={product.title}
               price={product.price}
               id={product.id}
+              quantity={product.quantity >= 0 ? product.quantity : 0}
               />
           )
         })}
 
-    </section>
+      </section>
     );
       }
 

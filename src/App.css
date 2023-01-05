@@ -166,4 +166,17 @@
       color: #666;
       font-size: 14px;
     }
+    .iconButton{
+      font: size 50em;
+
+    }
+  .stickyHeader{
+    position: sticky;
+    top: 0;
+  }
+  .products{
+    overflow: scroll; 
+    max-height: 600px;
+  }
+
     

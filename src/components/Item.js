@@ -1,20 +1,27 @@
 import React from 'react'
-// import { useContext } from "react";
-// import MyContext from "../MyContext";
+import './Item.css'
+import { useContext } from "react";
+import MyContext from "../MyContext";
 
-
-const Item = ({title, price,quantity}) => {
-    // const {shoppingCart} = useContext(MyContext);
+const Item = ({title,quantity,id,amount}) => {
+    const {onAdd,onRemoveOne,setAddButton } = useContext(MyContext);
+  
     return(
         <div>
 
-          <div>
+          <div className='item-card'>
             <br></br>
             <span>{title}</span>
             <br></br>
-            <span>Quantity: {quantity}</span>
+            <div>
+              <div className='amountInDrawer' marging='left'>
+                <button className='button-remove' onClick={()=> onRemoveOne(id, setAddButton)} cursor='pointer'>-</button>
+                <span className='qnty'>{quantity} in cart</span>
+                <button className='button-add' onClick={()=>onAdd(id,setAddButton)} cursor='pointer'>+</button>
+              </div>            
+            </div>
             <br></br>
-            <span>Price: {price}$</span>
+            <span>Price: {amount}$</span>
           </div>
 
 

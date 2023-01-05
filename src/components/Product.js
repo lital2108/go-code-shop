@@ -1,49 +1,48 @@
 import './Product.css'
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import { useContext } from "react";
+import { useContext,useState } from "react";
 import MyContext from "../MyContext";
-import Alert from '@mui/material/Alert';
+import {useNavigate} from 'react-router-dom';
 
 
-const Product=({imgUrl, title, price,id})=>{
-  const { shoppingCart, setShoppingCart,productsData} = useContext(MyContext);
 
-  const onAdd=()=>{
-    const productExist=shoppingCart.find((i) => i.id === id)
-    if(productExist){
-      setShoppingCart(shoppingCart.map((i)=>i.id===id ? {...productExist, quantity:productExist.quantity+1} : i))
-    }
-    else{
-        const newItem={id,  quantity: 1, title, price}
-        setShoppingCart([...shoppingCart, newItem])
-    }
-}
+const Product=({imgUrl, title, price,id, quantity=0})=>{
+  const navigate = useNavigate();
+  const [ addButton, setAddButton ] = useState(true)
+  const { shoppingCart, setShoppingCart, setProductsData, productsData, onRemoveOne, onAdd} = useContext(MyContext);
+
+
 const onRemove= () =>{
-  const productExist=shoppingCart.find((i) => i.id === id)
-  if(productExist){
-    if(productExist.quantity===1){
-      let shoppingCartProducts=shoppingCart.filter(i=>i.id!==id)
-      setShoppingCart(shoppingCartProducts)
-    }
-    else{
-    setShoppingCart(shoppingCart.map((i)=>i.id===id ? {...productExist, quantity:productExist.quantity-1} : i ))
-    }
-}}
+  const productExistIndex=productsData.findIndex((i) => i.id === id)
+  const productsClone = [...productsData]
+  productsClone[productExistIndex].quantity = 0
+  setProductsData(productsClone)
+  setShoppingCart(shoppingCart.filter((i)=>i.id!==id))
+  setAddButton(true)
+}
 
 
     return(
       <div className="product-card">
+
         <div className="product-image">
-          <img
-            src={imgUrl}
-          />
+          <img onClick={() => {navigate(`products/${id}`)}}  src={imgUrl} />
         </div>
+
         <div className="product-info">
           <h5>{title}</h5>
           <h6>{price}$</h6>
-          <ControlPointIcon title='Add' onClick={()=>{onAdd(shoppingCart,setShoppingCart,id,productsData)}}/> 
-          <RemoveCircleOutlineIcon title='Remove' onClick={()=>{onRemove(id,shoppingCart,setShoppingCart)}}/>
+          { addButton ? 
+          <button className='buttonAdd' title='Add' onClick={() => onAdd(id, setAddButton, title, price, imgUrl)}>Add To Cart</button> 
+          : 
+          <div>
+            <div className='amountInDrawer' >
+              <button className='button-remove'onClick={() => onRemoveOne(id, setAddButton)} cursor='pointer'>-</button>
+              <span className='qnty'>{quantity} in cart</span>
+              <button className='button-add' onClick={() => onAdd(id, setAddButton)} cursor='pointer'>+</button>
+             </div>  
+            <button className='buttonRemove'title='Remove' onClick={onRemove}>Remove Item</button>
+          </div>
+          }
         </div>
       </div>
     );
